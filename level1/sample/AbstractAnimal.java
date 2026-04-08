@@ -1,4 +1,4 @@
-package level1.animal;
+package level1.sample;
 
 public abstract class AbstractAnimal {
 
