@@ -10,4 +10,9 @@ public class Dog extends Animal{
     public void speak(){
         System.out.println(name + " says Woof");
     }
+
+    @Override
+    public String getTypeLabel(){
+        return "犬";
+    }
 }

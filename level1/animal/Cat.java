@@ -10,5 +10,10 @@ public class Cat extends Animal{
     public void speak(){
         System.out.println(name + " says Meow");
     }
+
+    @Override
+    public String getTypeLabel(){
+        return "猫";
+    }
 }
 
