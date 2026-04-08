@@ -14,4 +14,8 @@ public class Animal {
     public  void speak(){
         System.out.println("Animal sound");
     }
+
+    public String getTypeLabel(){
+        return "動物";
+    }
 }
