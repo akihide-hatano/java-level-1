@@ -21,14 +21,8 @@ public class RunnerAnimalCreate {
     private static void processAnimals(Animal[] animals){
 
         for(Animal animal : animals){
-
-            if (animal instanceof Bird) {
-                System.out.println("→ これは鳥です");
-            }else if (animal instanceof Dog){
-                System.out.println("→ これは犬です");
-            }else{
-                System.out.println("→ その他の動物");
-            }
+            System.out.println("-------------");
+            System.out.println("これは" + animal.getTypeLabel());
             System.out.println("-------------");
         }
     }
