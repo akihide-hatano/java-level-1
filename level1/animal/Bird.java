@@ -8,7 +8,7 @@ public class Bird extends Animal implements Flyable{
 
     @Override
     public void speak(){
-        System.out.println(name + " says chirps");
+        System.out.println(getName() + " says chirps");
     }
 
     @Override
