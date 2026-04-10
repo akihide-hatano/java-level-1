@@ -91,12 +91,22 @@ protected String getName() {
 ---
 
 ### 3. 責務分離
-- create：生成
-- process：処理
+このプロジェクトでは「何をするか（役割）」で責務を分離しています。
+
+- **level1（モデル）**
+  - データと振る舞い（ルール）を定義する
+  - 例：Dogは「犬」を返す、BirdはFlyableを持つ
+
+- **level2（処理）**
+  - オブジェクトを生成し、どのように使うかを記述する
+
+```java
+Animal[] animals = createAnimals(); // 生成（create）
+processAnimals(animals);           // 処理（process）
 
 ---
 
-### 4. instanceof排除（改善済）
+### 4. instanceof排除
 ```java
 animal.getTypeLabel();
 ```
