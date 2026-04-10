@@ -18,7 +18,7 @@ public class Bird extends Animal implements Flyable{
 
    @Override
    public String getTypeLabel(){
-       return "鳥";
-   }
+        return "鳥";
+    }
 
 }
