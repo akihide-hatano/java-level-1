@@ -1,96 +1,207 @@
 # Java OOP Practice: Animal Example
 
 Javaの基礎文法とオブジェクト指向（OOP）理解を深めるために作成した練習コードです。  
-特に **継承 / オーバーライド / 抽象クラス / インターフェース / final** を意識して実装しています。
+特に **継承 / オーバーライド / 多態性 / インターフェース / カプセル化** を意識して実装しています。
 
 ---
 
 ## 目的
-- JavaのOOPの基本要素（継承・多態性・抽象・インターフェース）を、最小構成のコードで手を動かして確認する
-- 「親型で扱って子クラスの振る舞いが呼ばれる（polymorphism）」を体感する
-- 抽象クラス・インターフェース・final の役割の違いを整理する
+- JavaのOOPの基本要素（継承・多態性・抽象・インターフェース）を理解する
+- 親クラスで子クラスを扱う「ポリモーフィズム」を体感する
+- 実務を意識した設計（責務分離・カプセル化・テスト）に触れる
 
 ---
 
-## 構成（Directory）
+## 技術スタック
+- Java 21
+- Maven
+- JUnit 5
+- VSCode
+
+---
+
+## ディレクトリ構成
 ```
 .
-├── level1
-│   └── animal
-│       ├── AbstractAnimal.java
-│       ├── Animal.java
-│       ├── Bird.java
-│       ├── Cat.java
-│       ├── Dog.java
-│       ├── FinalAnimal.java
-│       └── Flyable.java
-└── level2
-    ├── AnimalRunner.java
-    ├── RunnerAnimal.java
-    └── RunnerAnimalCreate.java
+├── pom.xml
+├── src
+│   ├── main
+│   │   └── java
+│   │       ├── level1
+│   │       │   ├── animal
+│   │       │   │   ├── Animal.java
+│   │       │   │   ├── Dog.java
+│   │       │   │   ├── Cat.java
+│   │       │   │   ├── Bird.java
+│   │       │   │   ├── Flyable.java
+│   │       │   │   └── FinalAnimal.java
+│   │       │   └── sample
+│   │       │       └── AbstractAnimal.java
+│   │       └── level2
+│   │           ├── AnimalRunner.java
+│   │           ├── RunnerAnimal.java
+│   │           └── RunnerAnimalCreate.java
+│   └── test
+│       └── java
+│           ├── level1
+│           │   └── animal
+│           │       ├── DogTest.java
+│           │       └── BirdTest.java
+│           └── level2
+│               └── RunnerAnimalCreateTest.java
 ```
----
-
-## クラス関係（ざっくり図）
-      +------------------+
-      |     Animal       |
-      |  (base class)    |
-      +------------------+
-         ^       ^     ^
-         |       |     |
-       Dog     Cat   Bird  ---- implements ----> Flyable
-                              (fly capability)
 
 ---
 
-## 各クラスの意図
-### level1/animal
-- `Animal`  
-  基底クラス。`name` を持ち、`speak()` を持つ（子クラスでオーバーライドして鳴き声を変える想定）。
-- `Dog`, `Cat`, `Bird`  
-  `Animal` を継承し `speak()` をオーバーライドして振る舞いを変える。
-- `Flyable`  
-  「飛べる」という能力をインターフェースとして切り出し、`Bird` のみに実装させる。
-- `FinalAnimal`  
-  `final class` の挙動確認（継承できないクラスの例）。
-- `AbstractAnimal`  
-  抽象クラスの例（`abstract` と `abstract method` の確認用）。  
-  ※現状は比較用に配置しており、今後 `Animal` を抽象化して統合する案も検討中。
+## クラス構造（概要）
+```
+Animal（基底クラス）
+  ↑
+  ├ Dog
+  ├ Cat
+  └ Bird → implements Flyable
+```
 
 ---
 
-## 実行例（level2）
-### `RunnerAnimal`
-各クラスを個別生成して `speak()` を呼ぶ基本形。
+## 設計ポイント
 
-### `AnimalRunner`
-`Animal[]` に格納し、親型で `speak()` を呼ぶことで多態性（polymorphism）を確認。
-
-### `RunnerAnimalCreate`
-生成（create）と処理（process）を分割し、責務を意識した形。  
-`instanceof` を使った型判定の例も含む（改善案として、型分岐を避ける設計にも置き換え可能）。
-
----
-
-## 今後の改善案（ToDo）
-- `instanceof` による型分岐を、ポリモーフィズムで置き換える（例：`getTypeName()` を追加する）
-- `AbstractAnimal` と `Animal` の役割整理（どちらかに統合する）
-- `name` を `private final` + getter にしてカプセル化を強める
+### 1. ポリモーフィズム
+```java
+Animal[] animals = {
+    new Dog("Pochi"),
+    new Cat("Mimi"),
+    new Bird("Pipi")
+};
+```
+→ 親型で子クラスを扱う
 
 ---
 
-## 環境
-- Java: (例) 17
-- 実行: `javac` / `java` で動作確認
+### 2. カプセル化
+```java
+private final String name;
 
-## ビルドについて
+protected String getName() {
+    return name;
+}
+```
+→ フィールドを直接触らせない
 
-コンパイル成果物は `out` ディレクトリに出力しています。
-ソースコードとビルド成果物を分離する構成を意識しています。
+---
 
-コンパイル例：
-javac -d out level1/animal/*.java level2/*.java
+### 3. 責務分離
+- create：生成
+- process：処理
 
-実行例：
-java -cp out level2.AnimalRunner
+---
 
+### 4. instanceof排除（改善済）
+```java
+animal.getTypeLabel();
+```
+→ ポリモーフィズムで分岐を排除
+
+---
+
+## テスト（JUnit）
+
+### 実施内容
+- Dog / Bird の戻り値確認
+- Bird が Flyable を実装しているか
+- Animal配列でのポリモーフィズム動作確認
+
+### 実行方法
+```
+mvn test
+```
+
+---
+
+## ビルド
+
+```
+mvn clean install
+```
+
+---
+
+## 環境構築
+
+### 1. Javaインストール
+```
+java -version
+```
+
+### 2. Mavenインストール
+```
+mvn -version
+```
+
+### 3. VSCode拡張
+- Extension Pack for Java
+
+---
+
+## 今後の改善（ToDo）
+- speak() をテスト可能な設計に変更（return化）
+- buildLabel() のような純粋関数の導入
+- Abstractクラスと通常クラスの役割整理
+- テストケースの追加（境界値・異常系）
+
+---
+
+## ハマったポイント / 困ったこと
+
+### 1. JUnitが動かない問題
+- Mavenを使わないと `org.junit` が解決できずエラーになる
+- 手動でJARを入れる方法もあるが、依存関係管理が非常に面倒
+-  Mavenで `pom.xml` に依存関係を追加することで解決
+
+---
+
+### 2. VSCodeでテストのRunボタンが出ない
+- Mavenでは `mvn test` で実行できるが、VSCode上で実行ボタンが出ないことがある
+- 原因はJava Test Runnerの再読込や認識遅延
+- `Java: Clean Java Language Server Workspace` で解決
+
+---
+
+### 3. packageとimportの理解不足
+- 別パッケージのクラスが使えずエラーになる
+- `import level1.animal.*;` が必要
+
+---
+
+### 4. voidメソッドはテストしにくい
+- `System.out.println` だけではJUnitで検証できない
+- return値を持つメソッドに変更する必要がある
+
+---
+
+### 5. Mavenプロジェクトの理解不足
+- `pom.xml` がないと `mvn` コマンドが動かない
+-  プロジェクト直下に配置する必要あり
+
+---
+
+### 6. Gitでブランチ削除の不安
+- `git branch -d main` を削除してしまったが問題なし
+-  ローカルのみ削除されるため、`origin/main` から復元可能
+
+---
+
+## 学びポイント
+- 「テストしやすい設計」が重要
+- 「出力」ではなく「戻り値」で設計する
+- Mavenによる依存管理の重要性
+- パッケージとimportの理解
+
+---
+
+## まとめ
+このプロジェクトは単なるOOP学習ではなく、
+
+👉 **設計・テスト・ビルドまで含めた実務ベースの練習**
+
+を目的としています。
