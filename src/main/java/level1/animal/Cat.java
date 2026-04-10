@@ -8,7 +8,12 @@ public class Cat extends Animal{
 
     @Override
     public void speak(){
-        System.out.println(name + " says Meow");
+        System.out.println(getName() + " says Meow");
+    }
+
+    @Override
+    public String getTypeLabel(){
+        return "猫";
     }
 }
 
