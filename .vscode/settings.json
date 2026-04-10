@@ -1,0 +1,7 @@
+//パスを記載
+{
+    "java.project.sourcePaths": [
+        "src/main/java",
+        "src/test/java"
+    ]
+}

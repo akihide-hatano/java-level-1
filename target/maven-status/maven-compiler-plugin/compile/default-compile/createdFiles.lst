@@ -1,0 +1,10 @@
+level1/sample/AbstractAnimal.class
+level1/animal/Cat.class
+level2/AnimalRunner.class
+level1/animal/FinalAnimal.class
+level1/animal/Animal.class
+level1/animal/Dog.class
+level2/RunnerAnimal.class
+level1/animal/Bird.class
+level2/RunnerAnimalCreate.class
+level1/animal/Flyable.class
